@@ -18,7 +18,7 @@ jobs:
       - name: Set up JDK 17
         uses: actions/setup-java@v3
         with:
-          distribution: 'temurin' # Specify the distribution
+          distribution: 'temurin'
           java-version: '17'
 
       - name: Cache SonarQube packages
@@ -39,4 +39,6 @@ jobs:
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
-        run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=Shamlaisthikar_SonarQube_8ad7242c-1d83-4666-af25-4d1ca113d8aa -Dsonar.projectName='SonarQube'
+        run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar \
+          -Dsonar.projectKey=Shamlaisthikar_SonarQube_8ad7242c-1d83-4666-af25-4d1ca113d8aa \
+          -Dsonar.projectName='SonarQube'
