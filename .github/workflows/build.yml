@@ -13,32 +13,27 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          fetch-depth: 0  # Shallow clones should be disabled for better relevance of analysis
-      
+          fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
+
       - name: Set up JDK 17
-        uses: actions/setup-java@v2  # Updated to the latest version
+        uses: actions/setup-java@v3
         with:
-          java-version: '17'
-      
-      - name: Set up Node.js
-        uses: actions/setup-node@v3  # Using a stable Node.js version
-        with:
-          node-version: '20'  # Updated to Node.js 20 to avoid deprecation warnings
-      
+          java-version: 17
+
       - name: Cache SonarQube packages
-        uses: actions/cache@v3  # Updated to the latest version
+        uses: actions/cache@v3
         with:
           path: ~/.sonar/cache
           key: ${{ runner.os }}-sonar
           restore-keys: ${{ runner.os }}-sonar
-      
+
       - name: Cache Maven packages
-        uses: actions/cache@v3  # Updated to the latest version
+        uses: actions/cache@v3
         with:
           path: ~/.m2
           key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
           restore-keys: ${{ runner.os }}-m2
-      
+
       - name: Build and analyze
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
