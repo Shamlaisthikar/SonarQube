@@ -1,51 +1,38 @@
-name: Build and Analyze Java Project
+name: Build
 
 on:
   push:
     branches:
-      - main  # Triggers the workflow for pushes to the 'main' branch
+      - main
+
 
 jobs:
   build:
-    name: Build and Analyze with SonarQube
+    name: Build and analyze
     runs-on: ubuntu-latest
-
+    
     steps:
-      - name: Checkout Code
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
         with:
-          fetch-depth: 0  # Important for full history to be fetched for SonarQube analysis
-
+          fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
       - name: Set up JDK 17
-        uses: actions/setup-java@v3
+        uses: actions/setup-java@v1
         with:
-          distribution: 'temurin'  # Use Temurin distribution of JDK
           java-version: 17
-
-      - name: Cache Maven packages
-        uses: actions/cache@v3
-        with:
-          path: ~/.m2
-          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
-          restore-keys: |
-            ${{ runner.os }}-m2
-
-      - name: Build with Maven
-        run: mvn clean install  # Builds the Java project
-
       - name: Cache SonarQube packages
-        uses: actions/cache@v3
+        uses: actions/cache@v1
         with:
           path: ~/.sonar/cache
           key: ${{ runner.os }}-sonar
-          restore-keys: |
-            ${{ runner.os }}-sonar
-
-      - name: Run SonarQube Scan
+          restore-keys: ${{ runner.os }}-sonar
+      - name: Cache Maven packages
+        uses: actions/cache@v1
+        with:
+          path: ~/.m2
+          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+          restore-keys: ${{ runner.os }}-m2
+      - name: Build and analyze
         env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}  # SonarQube token from GitHub secrets
-          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}  # SonarQube host URL from GitHub secrets
-        run: mvn verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar \
-          -Dsonar.projectKey=Shamlaisthikar_SonarQube_8ad7242c-1d83-4666-af25-4d1ca113d8aa \
-          -Dsonar.projectName='SonarQube Java Project'
-
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+        run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=Shamlaisthikar_SonarQube_8ad7242c-1d83-4666-af25-4d1ca113d8aa -Dsonar.projectName='SonarQube'
