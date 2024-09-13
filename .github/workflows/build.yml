@@ -33,6 +33,6 @@ jobs:
           restore-keys: ${{ runner.os }}-m2
       - name: Build and analyze
         env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}//secret
-          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}//secrets 
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
         run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=Shamlaisthikar_SonarQube_8ad7242c-1d83-4666-af25-4d1ca113d8aa -Dsonar.projectName='SonarQube'
